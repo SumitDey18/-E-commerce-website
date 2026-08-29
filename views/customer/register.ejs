@@ -1,0 +1,16 @@
+<%- include("../partials/header", { title: "Register" }) %>
+<div class="form-box">
+    <h1>Register</h1>
+    <form action="/customer/register" method="POST">
+        <label>Name</label>
+        <input name="name" required>
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Password</label>
+        <div class="password-wrap"><input type="password" name="password" id="registerPassword" minlength="6" required><button type="button" class="toggle-password" onclick="togglePassword('registerPassword', this)">👁</button></div>
+        <button class="btn">Register</button>
+    <script>function togglePassword(id,btn){const input=document.getElementById(id);input.type=input.type==='password'?'text':'password';btn.textContent=input.type==='password'?'👁':'🙈';}</script>
+    </form>
+    <p>Already registered? <a href="/customer/login">Login</a></p>
+</div>
+<%- include("../partials/footer") %>

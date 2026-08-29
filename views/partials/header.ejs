@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || "E-Commerce" %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="/">Home</a>
+        <a href="/customer/products">Products</a>
+        <% if (user && user.role === "customer") { %>
+            <a href="/customer/cart">Cart</a>
+            <a href="/customer/orders">My Orders</a>
+        <% } %>
+        <% if (user && user.role === "host") { %>
+            <a href="/host">Host Dashboard</a>
+            <a href="/host/products">My Products</a>
+        <% } %>
+        <% if (user && user.role === "admin") { %>
+            <a href="/admin">Admin Dashboard</a>
+            <a href="/host/upload">Upload Product</a>
+            <a href="/host/products">All Products</a>
+        <% } %>
+    </div>
+    <div class="nav-right">
+        <% if (user) { %>
+            <span class="welcome">Hi, <%= user.name %> (<%= user.role %>)</span>
+            <a href="/customer/logout">Logout</a>
+        <% } else { %>
+            <a href="/customer/login">Login</a>
+            <a href="/customer/register">Register</a>
+        <% } %>
+    </div>
+</nav>
+<main class="container">

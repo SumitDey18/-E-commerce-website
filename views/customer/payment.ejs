@@ -1,0 +1,64 @@
+<%- include("../partials/header", { title: "Payment" }) %>
+<div class="form-box">
+    <h1>Payment</h1>
+    <p>Order ID: <%= order._id %></p>
+    <h2>Total: ₹<%= order.total %></h2>
+
+    <% if (!razorpayOrder) { %>
+        <p class="note"><%= reason || "Razorpay is not configured." %></p>
+        <p>Add your Razorpay TEST Key ID and Key Secret to <b>.env</b>, restart the server, and try again.</p>
+        <p>Or go back and choose <b>Cash on Delivery</b>.</p>
+        <a class="btn" href="/customer/products">Back to Products</a>
+    <% } else { %>
+        <button id="pay" class="btn">Pay Now</button>
+        <a class="btn secondary" href="/customer/payment/cancel/<%= order._id %>">Cancel Payment</a>
+    <% } %>
+</div>
+
+<% if (razorpayOrder) { %>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById("pay").onclick = function () {
+    const options = {
+        key: "<%= key %>",
+        amount: "<%= razorpayOrder.amount %>",
+        currency: "INR",
+        name: "My E-Commerce",
+        description: "Order Payment",
+        order_id: "<%= razorpayOrder.id %>",
+        handler: function (response) {
+            fetch("/customer/payment/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Payment successful");
+                    window.location.href = "/customer/orders";
+                } else {
+                    alert(data.message || "Payment verification failed");
+                }
+            })
+            .catch(() => alert("Could not verify payment with the server."));
+        },
+        theme: { color: "#111827" }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on("payment.failed", function (response) {
+        fetch("/customer/payment/failed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                razorpay_order_id: "<%= razorpayOrder.id %>",
+                razorpay_payment_id: response.error && response.error.metadata ? response.error.metadata.payment_id : ""
+            })
+        }).finally(() => alert("Payment failed. You can retry from checkout or use Cash on Delivery."));
+    });
+    rzp.open();
+};
+</script>
+<% } %>
+<%- include("../partials/footer") %>

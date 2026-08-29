@@ -1,0 +1,43 @@
+<%- include("../partials/header", { title: "Admin Dashboard" }) %>
+<h1>Admin Dashboard</h1>
+<h2>Welcome <%= user.name %></h2>
+<p>Role: <b><%= user.role %></b></p>
+
+<div class="stats-grid">
+    <div class="stat-card"><span>Total Users</span><strong><%= stats.users %></strong></div>
+    <div class="stat-card"><span>Total Products</span><strong><%= stats.products %></strong></div>
+    <div class="stat-card"><span>Total Orders</span><strong><%= stats.orders %></strong></div>
+    <div class="stat-card"><span>Total Sales</span><strong>₹<%= Number(stats.sales).toFixed(2) %></strong></div>
+    <div class="stat-card"><span>Pending</span><strong><%= stats.pending %></strong></div>
+    <div class="stat-card"><span>Delivered</span><strong><%= stats.delivered %></strong></div>
+    <div class="stat-card"><span>Cancelled</span><strong><%= stats.cancelled %></strong></div>
+</div>
+
+<div class="dashboard">
+    <div class="dashboard-card"><h2>Products</h2><p>Upload or manage every product.</p><a class="btn" href="/host/upload">Upload Product</a> <a class="btn secondary" href="/host/products">All Products</a></div>
+</div>
+
+<h2>Users</h2>
+<% if (!users || !users.length) { %><p>No users found.</p><% } else { %>
+<div class="table-wrap"><table>
+<tr><th>Name</th><th>Email</th><th>Verified</th><th>Role</th><th>Change Role</th></tr>
+<% users.forEach(u => { %><tr>
+<td><%= u.name %></td><td><%= u.email %></td><td><%= u.isVerified ? "Yes" : "No" %></td><td><%= u.role %></td>
+<td><form action="/admin/users/<%= u._id %>/role" method="POST" class="inline-form"><select name="role"><option value="customer" <%= u.role === "customer" ? "selected" : "" %>>customer</option><option value="host" <%= u.role === "host" ? "selected" : "" %>>host</option><option value="admin" <%= u.role === "admin" ? "selected" : "" %>>admin</option></select><button class="btn small">Save</button></form></td>
+</tr><% }) %></table></div>
+<% } %>
+
+<h2>Orders</h2>
+<% if (!orders || !orders.length) { %><p>No orders yet.</p><% } else { %>
+<% orders.forEach(order => { %><div class="order-card">
+<p><b>Order:</b> <%= order._id %></p>
+<p><b>Customer:</b> <%= order.user ? order.user.name : "Unknown" %> (<%= order.user ? order.user.email : "" %>)</p>
+<p><b>Total:</b> ₹<%= Number(order.total || 0).toFixed(2) %></p>
+<p><b>Payment:</b> <%= order.paymentStatus || "pending" %> | <b>Method:</b> <%= order.paymentMethod || "-" %></p>
+<% if (order.address) { %><p><b>Address:</b> <%= order.address.address || "" %>, <%= order.address.city || "" %>, <%= order.address.state || "" %> - <%= order.address.pincode || "" %></p><% } else { %><p><b>Address:</b> Not provided</p><% } %>
+<% if (order.address && order.address.latitude != null && order.address.longitude != null) { %><a target="_blank" href="https://www.google.com/maps?q=<%= order.address.latitude %>,<%= order.address.longitude %>">Open Customer Location</a><% } %>
+<form action="/admin/orders/<%= order._id %>/status" method="POST" class="inline-form top-gap"><select name="status"><% ["pending","confirmed","shipped","delivered","cancelled"].forEach(status => { %><option value="<%= status %>" <%= order.status === status ? "selected" : "" %>><%= status %></option><% }) %></select><button class="btn small">Update Status</button></form>
+<% if (order.paymentStatus === "paid" && order.razorpayPaymentId && !order.refundId) { %><form action="/admin/orders/<%= order._id %>/refund" method="POST" class="top-gap" onsubmit="return confirm('Refund this Razorpay payment?')"><button class="danger">Refund Payment</button></form><% } else if (order.paymentStatus === "refunded") { %><p class="note">Refunded: <%= order.refundId || "Yes" %></p><% } %>
+</div><% }) %>
+<% } %>
+<%- include("../partials/footer") %>

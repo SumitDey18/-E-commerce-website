@@ -1,0 +1,56 @@
+<%- include("../partials/header", { title: "Cart" }) %>
+<h1>My Cart</h1>
+
+<% if (!user.cart.length) { %>
+    <div class="form-box"><p>Your cart is empty.</p><a class="btn" href="/customer/products">Shop Products</a></div>
+<% } else { %>
+    <div class="table-wrap">
+        <table class="cart-table">
+            <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Total</th><th>Action</th></tr>
+            <% user.cart.forEach(item => { if (item.product) { %>
+                <tr>
+                    <td>
+                        <% if (item.product.image) { %><img class="cart-image" src="<%= item.product.image %>" alt="<%= item.product.name %>"><% } %>
+                        <b><%= item.product.name %></b>
+                    </td>
+                    <td>₹<%= item.product.price %></td>
+                    <td>
+                        <form action="/customer/cart/update/<%= item.product._id %>" method="POST" class="qty-form">
+                            
+                            <input class="qty-number" type="number" name="quantity" min="1" max="<%= item.product.quantity %>" value="<%= item.quantity %>" onchange="this.form.submit()">
+                        </form>
+                    </td>
+                    <td class="line-total" data-price="<%= item.product.price %>">₹<%= (item.product.price * item.quantity).toFixed(2) %></td>
+                    <td>
+                        <form action="/customer/cart/remove/<%= item.product._id %>" method="POST">
+                            <button class="danger" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            <% } }) %>
+        </table>
+    </div>
+    <div class="form-box cart-summary">
+        <h2>Grand Total: ₹<span id="grand-total"><%= Number(total).toFixed(2) %></span></h2>
+        <a class="btn" href="/customer/checkout">Proceed to Checkout</a>
+        <a class="btn secondary" href="/customer/products">Continue Shopping</a>
+    </div>
+<% } %>
+<script>
+function updateCartTotal() {
+    let total = 0;
+    document.querySelectorAll(".cart-table tr").forEach(row => {
+        const input = row.querySelector(".qty-number");
+        const line = row.querySelector(".line-total");
+        if (!input || !line) return;
+        const qty = Math.max(1, Number(input.value) || 1);
+        const price = Number(line.dataset.price) || 0;
+        line.textContent = "₹" + (price * qty).toFixed(2);
+        total += price * qty;
+    });
+    const grand = document.getElementById("grand-total");
+    if (grand) grand.textContent = total.toFixed(2);
+}
+document.querySelectorAll(".qty-number").forEach(input => input.addEventListener("input", updateCartTotal));
+</script>
+<%- include("../partials/footer") %>

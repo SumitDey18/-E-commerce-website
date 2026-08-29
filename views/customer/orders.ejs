@@ -1,0 +1,64 @@
+<%- include("../partials/header", { title: "My Orders" }) %>
+
+<h1>My Orders</h1>
+
+<% if (!orders || orders.length === 0) { %>
+    <p>No orders yet.</p>
+<% } else { %>
+
+    <% orders.forEach(order => { %>
+        <div class="order-card">
+
+            <h3>Order: <%= order._id %></h3>
+
+            <p>
+                Total: <b>₹<%= order.total %></b>
+            </p>
+
+            <p>
+                Order Status: <b><%= order.status || "pending" %></b>
+            </p>
+
+            <p>
+                Payment:
+                <b><%= order.paymentStatus || "pending" %></b>
+                (<%= order.paymentMethod || "-" %>)
+            </p>
+
+            <% if (order.address) { %>
+
+                <p>
+                    Delivery:
+                    <%= order.address.name || "" %>,
+                    <%= order.address.phone || "" %>
+                </p>
+
+                <p>
+                    <%= order.address.address || "" %>,
+                    <%= order.address.city || "" %>,
+                    <%= order.address.state || "" %> -
+                    <%= order.address.pincode || "" %>
+                </p>
+
+                <% if (order.address.latitude != null && order.address.longitude != null) { %>
+                    <a
+                        target="_blank"
+                        href="https://www.google.com/maps?q=<%= order.address.latitude %>,<%= order.address.longitude %>">
+                        Open Delivery Location
+                    </a>
+                <% } %>
+
+            <% } else { %>
+                <p>Delivery address was not saved for this order.</p>
+            <% } %>
+
+            <% if (order.paymentStatus === "pending") { %>
+                <p class="note">Payment has not been completed yet.</p>
+            <% } %>
+
+        </div>
+    <% }) %>
+
+<% } %>
+
+<%- include("../partials/footer") %>

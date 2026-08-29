@@ -1,0 +1,19 @@
+<%- include("../partials/header", { title: "Verify Email" }) %>
+<div class="form-box">
+    <h1>Verify Email</h1>
+    <p>We sent a 6-digit OTP to <b><%= email %></b>.</p>
+    <p>OTP expires in 5 minutes. You have up to 5 attempts.</p>
+    <form action="/customer/verify" method="POST">
+        <label>Email</label>
+        <input type="email" name="email" value="<%= email %>" required>
+        <label>OTP</label>
+        <input name="otp" maxlength="6" minlength="6" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" placeholder="Enter 6-digit OTP" required>
+        <button class="btn" type="submit">Verify OTP</button>
+    </form>
+    <form action="/customer/verify/resend" method="POST" class="top-gap">
+        <input type="hidden" name="email" value="<%= email %>">
+        <button class="btn secondary" type="submit">Resend OTP</button>
+    </form>
+    <p class="top-gap"><a href="/customer/login">Back to Login</a></p>
+</div>
+<%- include("../partials/footer") %>

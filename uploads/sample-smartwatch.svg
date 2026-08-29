@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 400 300">
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f1f5f9"/><stop offset="1" stop-color="#dbeafe"/></linearGradient></defs>
+<rect width="400" height="300" rx="28" fill="url(#g)"/>
+<g fill="none" stroke="#1e293b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><rect x="145" y="55" width="110" height="55" rx="22"/><rect x="125" y="95" width="150" height="160" rx="28"/><rect x="145" y="245" width="110" height="55" rx="22"/><circle cx="200" cy="175" r="38"/></g>
+<text x="200" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#334155">Smart Fitness Watch</text>
+</svg>

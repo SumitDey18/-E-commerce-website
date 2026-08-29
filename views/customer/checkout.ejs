@@ -1,0 +1,35 @@
+<%- include("../partials/header", { title: "Checkout" }) %>
+<div class="form-box wide">
+    <h1>Delivery & Checkout</h1>
+    <form action="/customer/checkout" method="POST">
+        <label>Receiver Name</label><input name="name" required>
+        <label>Phone</label><input name="phone" required>
+        <label>Full Address</label><textarea name="address" required></textarea>
+        <label>City</label><input name="city" required>
+        <label>State</label><input name="state" required>
+        <label>Pincode</label><input name="pincode" required>
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+        <button type="button" class="btn secondary" onclick="getLocation()">Use My Current Location</button>
+        <p id="locationStatus">GPS location is optional.</p>
+        <label>Payment Method</label>
+        <select name="paymentMethod" required>
+            <option value="razorpay">Razorpay (Online)</option>
+            <option value="cod">Cash on Delivery</option>
+        </select>
+        <h2>Total: ₹<%= Number(total).toFixed(2) %></h2>
+        <button class="btn" type="submit">Place Order</button>
+    </form>
+</div>
+<script>
+function getLocation() {
+    const status = document.getElementById("locationStatus");
+    if (!navigator.geolocation) { status.textContent = "Geolocation is not supported."; return; }
+    status.textContent = "Getting location...";
+    navigator.geolocation.getCurrentPosition(
+        p => { document.getElementById("latitude").value = p.coords.latitude; document.getElementById("longitude").value = p.coords.longitude; status.textContent = "Location saved successfully."; },
+        () => { status.textContent = "Location permission denied/unavailable. You can continue without GPS."; }
+    );
+}
+</script>
+<%- include("../partials/footer") %>

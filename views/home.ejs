@@ -1,0 +1,15 @@
+<%- include("partials/header", { title: "Home" }) %>
+<section class="hero">
+    <h1>Simple E-Commerce Website</h1>
+    <p>Node.js + Express + MongoDB + EJS + Multer + Sessions + OTP + Razorpay</p>
+    <a class="btn" href="/customer/products">Shop Products</a>
+    <% if (!user) { %>
+        <a class="btn secondary" href="/customer/register">Create Account</a>
+    <% } %>
+</section>
+<div class="feature-grid">
+    <div class="dashboard-card"><h2>Customer</h2><p>Register, verify OTP, cart, location and checkout.</p></div>
+    <div class="dashboard-card"><h2>Host</h2><p>Upload, update and delete your own products.</p></div>
+    <div class="dashboard-card"><h2>Admin</h2><p>Manage all products, users and order status.</p></div>
+</div>
+<%- include("partials/footer") %>

@@ -1,0 +1,15 @@
+<%- include("../partials/header", { title: "Login" }) %>
+<div class="form-box">
+    <h1>Login</h1>
+    <form action="/customer/login" method="POST">
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Password</label>
+        <div class="password-wrap"><input type="password" name="password" id="loginPassword" required><button type="button" class="toggle-password" onclick="togglePassword('loginPassword', this)">👁</button></div>
+        <button class="btn">Login</button>
+    </form>
+    <p><a href="/customer/forgot-password">Forgot Password?</a></p>
+    <p>New user? <a href="/customer/register">Register</a></p>
+    <script>function togglePassword(id,btn){const input=document.getElementById(id);input.type=input.type==='password'?'text':'password';btn.textContent=input.type==='password'?'👁':'🙈';}</script>
+</div>
+<%- include("../partials/footer") %>

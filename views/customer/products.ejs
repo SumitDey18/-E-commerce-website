@@ -1,0 +1,48 @@
+<%- include("../partials/header", { title: "Products" }) %>
+<h1>Products</h1>
+
+<form class="filter-box" method="GET" action="/customer/products">
+    <input name="search" placeholder="Search products..." value="<%= filters.search %>">
+    <select name="category">
+        <option value="">All Categories</option>
+        <% categories.forEach(category => { %>
+            <option value="<%= category %>" <%= filters.category === category ? "selected" : "" %>><%= category %></option>
+        <% }) %>
+    </select>
+    <input type="number" name="minPrice" min="0" placeholder="Min ₹" value="<%= filters.minPrice %>">
+    <input type="number" name="maxPrice" min="0" placeholder="Max ₹" value="<%= filters.maxPrice %>">
+    <select name="sort">
+        <option value="newest" <%= filters.sort === "newest" ? "selected" : "" %>>Newest</option>
+        <option value="low" <%= filters.sort === "low" ? "selected" : "" %>>Price: Low → High</option>
+        <option value="high" <%= filters.sort === "high" ? "selected" : "" %>>Price: High → Low</option>
+        <option value="oldest" <%= filters.sort === "oldest" ? "selected" : "" %>>Oldest</option>
+    </select>
+    <button class="btn small" type="submit">Search / Filter</button>
+    <a class="btn secondary small" href="/customer/products">Clear</a>
+</form>
+
+<p><%= products.length %> product(s) found.</p>
+<div class="product-grid">
+<% if (!products.length) { %><p>No products match your search.</p><% } %>
+<% products.forEach(product => { %>
+    <div class="product-card">
+        <% if (product.image) { %><img src="<%= product.image %>" alt="<%= product.name %>"><% } %>
+        <span class="badge"><%= product.category || "Other" %></span>
+        <h2><%= product.name %></h2>
+        <p class="price">₹<%= product.price %></p>
+        <p><%= product.description || "" %></p>
+        <p>Stock: <%= product.quantity %></p>
+        <% if (user && user.role === "customer" && product.quantity > 0) { %>
+            <form action="/customer/cart/add/<%= product._id %>" method="POST" class="inline-form">
+                <input class="qty-input" type="number" name="quantity" min="1" max="<%= product.quantity %>" value="1">
+                <button class="btn" type="submit">Add to Cart</button>
+            </form>
+        <% } else if (product.quantity === 0) { %>
+            <p class="error-text">Out of stock</p>
+        <% } else if (!user) { %>
+            <a class="btn" href="/customer/login">Login to Buy</a>
+        <% } %>
+    </div>
+<% }) %>
+</div>
+<%- include("../partials/footer") %>

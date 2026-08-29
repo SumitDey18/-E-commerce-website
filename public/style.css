@@ -1,0 +1,3 @@
+
+
+.password-wrap{position:relative;display:flex;align-items:center}.password-wrap input{width:100%;padding-right:48px}.toggle-password{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;cursor:pointer;font-size:20px;padding:5px}.error{color:#b42318;background:#fee4e2;padding:10px;border-radius:8px}

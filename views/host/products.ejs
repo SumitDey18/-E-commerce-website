@@ -1,0 +1,24 @@
+<%- include("../partials/header", { title: "Manage Products" }) %>
+<h1><%= user.role === "admin" ? "All Products" : "My Products" %></h1>
+<a class="btn" href="/host/upload">Upload Product</a>
+<div class="product-grid top-gap">
+<% if (!products.length) { %><p>No products uploaded yet.</p><% } %>
+<% products.forEach(product => { %>
+    <div class="product-card">
+        <% if (product.image) { %><img src="<%= product.image %>" alt="<%= product.name %>"><% } %>
+        <span class="badge"><%= product.category || "Other" %></span>
+        <h2><%= product.name %></h2>
+        <p class="price">₹<%= product.price %></p>
+        <p>Quantity: <%= product.quantity %></p>
+        <p><%= product.description %></p>
+        <% if (user.role === "admin" && product.owner) { %>
+            <p>Owner: <b><%= product.owner.name %></b> (<%= product.owner.role %>)</p>
+        <% } %>
+        <a class="btn" href="/host/products/<%= product._id %>/update">Update</a>
+        <form action="/host/products/<%= product._id %>/delete" method="POST" class="top-gap">
+            <button class="danger">Delete</button>
+        </form>
+    </div>
+<% }) %>
+</div>
+<%- include("../partials/footer") %>

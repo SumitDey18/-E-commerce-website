@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 400 300">
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#f1f5f9"/><stop offset="1" stop-color="#dbeafe"/></linearGradient></defs>
+<rect width="400" height="300" rx="28" fill="url(#g)"/>
+<g fill="none" stroke="#1e293b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M95 220 Q145 195 175 120 L220 160 Q240 190 290 205 Q325 215 330 245 Q250 285 110 270 Q75 265 95 220Z"/><path d="M175 150l45 40"/></g>
+<text x="200" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#334155">Running Shoes</text>
+</svg>
